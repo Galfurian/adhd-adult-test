@@ -1,5 +1,25 @@
 /** Pure functions: no DOM, no network, no storage. */
 
+/** Allow existing single-language configurations and bilingual IT/EN text. */
+function validText(value) {
+  if (typeof value === "string") return Boolean(value.trim());
+  return value && typeof value === "object" && !Array.isArray(value) &&
+    ["it", "en"].every(lang => typeof value[lang] === "string" && value[lang].trim());
+}
+
+function optionCount(options) {
+  if (Array.isArray(options)) {
+    return options.length >= 2 && options.every(validText) ? options.length : 0;
+  }
+  if (!options || typeof options !== "object") return 0;
+  const it = options.it;
+  const en = options.en;
+  return Array.isArray(it) && Array.isArray(en) && it.length >= 2 &&
+    it.length === en.length && it.every(validText) && en.every(validText)
+    ? it.length : 0;
+}
+
+
 export function validateQuestionnaire(config) {
   if (!config || typeof config !== "object") throw new Error("Questionario mancante.");
   if (!config.domains || typeof config.domains !== "object" || Array.isArray(config.domains)) {
@@ -15,19 +35,19 @@ export function validateQuestionnaire(config) {
       throw new Error(`${name}: id mancante o duplicato.`);
     }
     ids.add(question.id);
-    if (typeof question.text !== "string" || !question.text.trim()) {
+    if (!validText(question.text)) {
       throw new Error(`${name}: testo mancante.`);
     }
     if (!Object.hasOwn(config.domains, question.domain) ||
-        typeof config.domains[question.domain] !== "string") {
+        !validText(config.domains[question.domain])) {
       throw new Error(`${name}: area non definita in domains.`);
     }
     const options = question.options ?? config.options;
-    if (!Array.isArray(options) || options.length < 2 ||
-        options.some(option => typeof option !== "string" || !option.trim())) {
-      throw new Error(`${name}: specifica almeno due opzioni testuali.`);
+    const count = optionCount(options);
+    if (!count) {
+      throw new Error(`${name}: specifica almeno due opzioni testuali con le traduzioni IT/EN.`);
     }
-    if (!Array.isArray(question.points) || question.points.length !== options.length ||
+    if (!Array.isArray(question.points) || question.points.length !== count ||
         question.points.some(point => typeof point !== "number" || !Number.isFinite(point) || point < 0)) {
       throw new Error(`${name}: points deve contenere un numero >= 0 per ogni opzione.`);
     }
@@ -37,7 +57,7 @@ export function validateQuestionnaire(config) {
     for (const band of config.bands) {
       if (typeof band.min !== "number" || typeof band.max !== "number" ||
           band.min > band.max || typeof band.label !== "string" ||
-          typeof band.description !== "string") {
+          !validText(band.description) || !validText(band.label)) {
         throw new Error("Una fascia di scoring in bands non e' valida.");
       }
     }
@@ -66,7 +86,7 @@ export function calculateScores(config, answers) {
     max += maxPoints;
     if (selected === undefined) continue;
     const options = q.options ?? config.options;
-    if (!Number.isInteger(selected) || selected < 0 || selected >= options.length) {
+    if (!Number.isInteger(selected) || selected < 0 || selected >= optionCount(options)) {
       throw new RangeError(`Risposta non valida per ${q.id}.`);
     }
     const points = q.points[selected];
