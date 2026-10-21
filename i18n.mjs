@@ -1,5 +1,5 @@
 /**
- * Interface translations. Add keys to BOTH languages when changing the UI.
+ * Add keys to both languages when changing the interface.
  * The text of questions, answer choices, domains and score bands lives in
  * questionnaire.mjs, together with the scoring configuration.
  */
@@ -101,5 +101,5 @@ export function localized(value, language) {
 
 export function detectLanguage(preferred, parameter) {
   if (LANGUAGES.includes(parameter)) return parameter;
-  return typeof preferred === "string" && /^en(?:-|$)/i.test(preferred) ? "en" : "it";
+  return typeof preferred === "string" && /^it(?:-|$)/i.test(preferred) ? "it" : "en";
 }

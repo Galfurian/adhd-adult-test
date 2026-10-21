@@ -1,50 +1,50 @@
-# ADHD Adult Test — interfaccia statica, privacy-first
+# ADHD Adult Test — static, privacy-first questionnaire
 
-Sito statico per un questionario a domande successive: interfaccia progettata per ridurre le distrazioni, configurazione dati separata dalla UI e punteggi definiti **per singola domanda**.
+A static, one-question-at-a-time questionnaire interface designed to reduce distractions. Questionnaire data is separate from the UI, and scoring is configured **per question**.
 
-**Stato: prototipo dimostrativo, NON un test diagnostico o uno screening clinicamente validato.** Le cinque domande presenti sono esempi originali. Nessun punteggio o soglia deve essere interpretato come una probabilità di ADHD.
+**Status: demonstration prototype, NOT a diagnostic test or a clinically validated screening tool.** The five questions currently included are original examples. No score or threshold should be interpreted as the probability of ADHD.
 
-## Caratteristiche
+## Features
 
-- Una sola domanda per schermata, risposte grandi, navigazione avanti/indietro.
-- Accessibilità: etichette associate, tastiera, focus visibile, colori ad alto contrasto, movimento ridotto, modalità chiara/scura del sistema.
-- Score totale e per area; mapping dei punti indipendente per ogni domanda, anche invertito.
-- Interfaccia interamente in italiano e inglese: pulsanti IT/EN sempre visibili, cambio lingua immediato senza perdere risposte, nessun salvataggio. Usa `?lang=en` per aprire direttamente in inglese (altrimenti segue la lingua del browser).
-- Nessun framework, pacchetto npm, font esterno, CDN, API, cookie, analytics, database, login, `localStorage`, `sessionStorage` o service worker.
-- Le risposte risiedono solo in una `Map` in memoria JavaScript. Chiudendo/ricaricando la pagina scompaiono. Il codice applicativo non invia risposte a server. L'hosting può comunque registrare le normali richieste HTTP nei propri log.
-- Funziona su GitHub Pages senza build né GitHub Actions.
+- One question per screen, large answer choices, and back/next navigation.
+- Accessibility features: associated labels, keyboard support, visible focus, high contrast, reduced motion, and system light/dark mode.
+- Total and per-domain scores; each question has its own point mapping, including reverse scoring.
+- Italian and English interface: persistent IT/EN buttons, instant language switching without losing answers, and no answer storage. Use `?lang=en` or `?lang=it` to select a language directly. Otherwise, Italian browser preferences select Italian; all other preferences default to English.
+- No framework, npm packages, external fonts, CDN, API, cookies, analytics, database, login, `localStorage`, `sessionStorage`, or service worker.
+- Answers stay in a JavaScript `Map` in memory and disappear when the page is closed or reloaded. The application code does not send answers to a server. The hosting provider may still record ordinary HTTP requests in its logs.
+- Runs on GitHub Pages without a build step or GitHub Actions.
 
-## Pubblicare su GitHub Pages
+## Publish on GitHub Pages
 
-1. Apri **Settings → Pages** nel repository.
-2. Imposta **Source: Deploy from a branch**, **Branch: `main`**, **Folder: `/(root)`** e salva.
-3. Una volta completata la pubblicazione, l'indirizzo sarà `https://galfurian.github.io/adhd-adult-test/`.
+1. Open **Settings → Pages** in the repository.
+2. Set **Source: Deploy from a branch**, **Branch: `main`**, **Folder: `/(root)`**, then save.
+3. Once published, the site will be available at `https://galfurian.github.io/adhd-adult-test/`.
 
-Nessuna configurazione del `base path`: gli asset usano percorsi relativi.
+No `base path` configuration is needed; assets use relative paths.
 
-## Modificare domande e scoring
+## Edit questions and scoring
 
-Apri **`questionnaire.mjs`**. Tutte le domande e i punteggi sono lì; per aggiungerne una copia un oggetto in `questions`:
+Open **`questionnaire.mjs`**. All questions and scores are defined there. To add a question, copy an object into `questions`:
 
 ```js
 {
-  id: "esempio-6",                    // unico
-  domain: "attenzione",               // una chiave definita in domains
+  id: "example-6",                    // unique
+  domain: "attention",                // a key defined in domains
   text: {
     it: "Testo della nuova domanda?",
     en: "Your new question?",
   },
-  points: [0, 0, 1, 1, 1],          // punti per le 5 risposte
+  points: [0, 0, 1, 1, 1],             // points for the five answers
 }
 ```
 
-Le risposte comuni sono in `options.it` e `options.en`; puoi modificarle oppure definire `options: { it: [...], en: [...] }` per una singola domanda. Aggiungi SEMPRE il testo in entrambe le lingue. L'array `points` è unico (non cambia con la lingua) e deve avere esattamente lo stesso numero di elementi delle opzioni in IT ed EN. Per uno scoring inverso, usa per esempio `[4, 3, 2, 1, 0]`. Per nuove aree, aggiungi in `domains` una chiave con etichette `{ it: "...", en: "..." }`. Le stringhe dell'interfaccia sono in `i18n.mjs`.
+Shared answer choices are in `options.it` and `options.en`. You can edit them or define `options: { it: [...], en: [...] }` for an individual question. Always provide text in both languages. The `points` array is shared across languages and must contain exactly as many entries as each language's answer choices. For reverse scoring, for example, use `[4, 3, 2, 1, 0]`. To add a domain, add a key to `domains` with `{ it: "...", en: "..." }` labels. Interface strings are in `i18n.mjs`.
 
-I risultati numerici sono generati in `scoring.mjs`, che non usa il DOM e può essere testato separatamente. Il comportamento dell'interfaccia è in `app.mjs`, lo stile in `styles.css`.
+Numeric results are generated by `scoring.mjs`, which does not use the DOM and can be tested separately. Interface behavior is in `app.mjs`; styles are in `styles.css`.
 
-### Fasce interpretative (facoltative)
+### Optional interpretation bands
 
-`bands: []` è intenzionalmente vuoto. Quando sostituisci gli esempi con **uno strumento validato** puoi configurare le fasce documentate, ad esempio:
+`bands: []` is intentionally empty. When replacing the examples with **a validated instrument**, you can configure its documented bands, for example:
 
 ```js
 bands: [
@@ -54,42 +54,43 @@ bands: [
 ]
 ```
 
-Questo esempio **non** è una soglia clinica: i valori sono puramente illustrativi. Le fasce compaiono soltanto se `demo: false`, il questionario è completo e lo score rientra nell'intervallo. L'app non genera percentuali di "probabilità ADHD".
+This example is **not** a clinical threshold; the values are illustrative only. Bands appear only when `demo: false`, the questionnaire is complete, and the score falls within a configured range. The app does not generate percentages for the "probability of ADHD."
 
-Usa solo domande e cut-off per cui disponi dei diritti e di evidenza scientifica appropriata; mantieni le attribuzioni richieste dallo strumento. Per lo screening dell'ADHD negli adulti, lo score non è una diagnosi.
+Only use questions and cut-offs for which you have the rights and appropriate scientific evidence; retain any required attributions. An adult ADHD screening score is not a diagnosis.
 
-## Provare il sito in locale
+## Run locally
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Apri `http://localhost:8000/`. Per i test automatici del motore di scoring (Node.js 20+):
+Open `http://localhost:8000/`. To run the scoring engine's automated tests (Node.js 20+):
 
 ```bash
 node --test tests/scoring.test.mjs
 ```
 
-## Struttura
+## Project structure
 
 ```text
-index.html         pagina, semantica, accessibilità e CSP
-styles.css         layout responsive, contrasto, dark mode
-app.mjs            rendering, navigazione e gestione risposte in RAM
-questionnaire.mjs  domande e punteggi, testi IT/EN
-scoring.mjs        validazione e scoring, funzioni pure
-i18n.mjs           traduzioni dell'interfaccia e selezione della lingua
-tests/             test automatici senza dipendenze
-.nojekyll          GitHub Pages senza trasformazioni Jekyll
+index.html         page structure, semantics, accessibility, and CSP
+styles.css         responsive layout, contrast, and dark mode
+app.mjs            rendering, navigation, and in-memory answer handling
+questionnaire.mjs  questions, scores, and IT/EN text
+scoring.mjs        validation and scoring pure functions
+i18n.mjs           interface translations and language selection
+tests/             dependency-free automated tests
+.nojekyll           disable Jekyll processing on GitHub Pages
 ```
 
-## Privacy e sicurezza
+## Privacy and security
 
-Il CSP in `index.html` vieta connessioni JavaScript (`connect-src 'none'`) e script/stili da domini terzi. Il rendering delle domande usa `textContent` anziché HTML dinamico. Nessun salvataggio o invio delle risposte è implementato.
+The CSP in `index.html` blocks JavaScript connections (`connect-src 'none'`) and scripts/styles from third-party domains. Question rendering uses `textContent` instead of dynamic HTML. The app does not store or submit answers.
 
-Se in futuro vorrai raccogliere risposte per una ricerca, serviranno un'informativa, un fondamento giuridico appropriato e una progettazione separata: **questa versione non raccoglie alcun risultato**.
-## Tipografia e colori
+If you later collect answers for research, you will need a privacy notice, an appropriate legal basis, and a separate design: **this version does not collect results**.
 
-Il progetto usa **font sans-serif di sistema** (nessun font scaricato), testo principale da 17 px, interlinea 1,65, larghezza di lettura contenuta, una domanda per schermata, controlli grandi e focus visibile. I colori sono sobri, non codificano mai da soli il significato delle risposte. La variante chiara e scura segue il sistema operativo. È stata corretta la sfumatura di testo secondario per il contrasto minimo WCAG AA.
+## Typography and color
 
-Non esiste un font o una palette universalmente dimostrati migliori per tutte le persone con ADHD. Si seguono criteri di accessibilità cognitiva e WCAG; il test con utenti reali resta necessario. Riferimenti: https://www.w3.org/WAI/WCAG2/supplemental/objectives/o5-user-focus/ e https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.
+The project uses system sans-serif fonts (no downloaded fonts), 17 px body text, 1.65 line height, a narrow reading width, one question per screen, large controls, and visible focus. Colors are restrained and never convey meaning by themselves. Light and dark themes follow the operating system. The secondary-text color was adjusted to meet the WCAG AA minimum contrast ratio.
+
+No font or color palette has been shown to work best for every person with ADHD. The design follows cognitive accessibility and WCAG guidance; testing with real users is still needed. References: https://www.w3.org/WAI/WCAG2/supplemental/objectives/o5-user-focus/ and https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.

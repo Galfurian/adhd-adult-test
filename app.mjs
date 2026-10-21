@@ -142,9 +142,9 @@ function reset() {
 function setup() {
   try {
     validateQuestionnaire(questionnaire);
-  } catch (error) {
+  } catch {
     renderTranslations();
-    $("error-detail").textContent = language === "it" && error instanceof Error ? error.message : t("errorFallback");
+    $("error-detail").textContent = t("errorFallback");
     showScreen("error-screen");
     return;
   }

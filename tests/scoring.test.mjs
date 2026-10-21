@@ -23,8 +23,8 @@ test('risposte e sottoscale sommate correttamente', () => {
   const result = calculateScores(questionnaire, selected);
   assert.equal(result.score, 3);
   assert.equal(result.max, 5);
-  assert.equal(result.domains.attenzione.score, 2);
-  assert.equal(result.domains.irrequietezza.score, 1);
+  assert.equal(result.domains.attention.score, 2);
+  assert.equal(result.domains.restlessness.score, 1);
   assert.equal(result.complete, true);
   assert.equal(result.band, null); // demo: no clinical interpretation
 });
@@ -50,15 +50,17 @@ test('soglie opzionali solo fuori dalla demo', () => {
 });
 
 test('configurazioni errate e risposte fuori range vengono rifiutate', () => {
-  assert.throws(() => validateQuestionnaire({domains: {}, questions: []}), /almeno una domanda/);
+  assert.throws(() => validateQuestionnaire({domains: {}, questions: []}), /at least one question/);
   const broken = {...questionnaire, questions: [questionnaire.questions[0], questionnaire.questions[0]]};
-  assert.throws(() => validateQuestionnaire(broken), /duplicato/);
-  assert.throws(() => calculateScores(questionnaire, new Map([['focus-1', 99]])), /non valida/);
+  assert.throws(() => validateQuestionnaire(broken), /duplicate id/);
+  assert.throws(() => calculateScores(questionnaire, new Map([['focus-1', 99]])), /Invalid answer/);
 });
 test('questionario bilingue completo, stesso scoring tra IT ed EN', async () => {
   const { localized, messages, detectLanguage } = await import('../i18n.mjs');
   assert.deepEqual(Object.keys(messages.it).sort(), Object.keys(messages.en).sort());
   assert.equal(detectLanguage('en-US', null), 'en');
+  assert.equal(detectLanguage('fr-FR', null), 'en');
+  assert.equal(detectLanguage('it-IT', null), 'it');
   assert.equal(detectLanguage('en-US', 'it'), 'it');
   for (const question of questionnaire.questions) {
     for (const lang of ['it','en']) {
@@ -80,5 +82,5 @@ test('traduzione mancante viene rifiutata per le nuove domande', () => {
     ...questionnaire,
     questions: [{ ...questionnaire.questions[0], text: { it: 'Solo italiano' } }],
   };
-  assert.throws(() => validateQuestionnaire(invalid), /testo mancante/);
+  assert.throws(() => validateQuestionnaire(invalid), /missing text/);
 });

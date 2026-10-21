@@ -1,109 +1,109 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f7f8f5" />
-    <meta name="description" content="Un'interfaccia essenziale per questionari di autovalutazione, senza tracciamento né salvataggio dei dati." />
+    <meta name="description" content="A simple self-assessment questionnaire with no tracking or answer storage." />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'" />
-    <title>Questionario per adulti · Un passo alla volta</title>
+    <title>Adult questionnaire · One step at a time</title>
     <link rel="stylesheet" href="./styles.css" />
     <script type="module" src="./app.mjs"></script>
   </head>
   <body>
     <div class="site-shell">
       <header class="site-header">
-        <div class="wordmark" aria-label="Questionario per adulti" data-i18n-aria-label="brand">
+        <div class="wordmark" aria-label="Adult questionnaire" data-i18n-aria-label="brand">
           <span class="mark" aria-hidden="true"><span></span><span></span><span></span></span>
-          <span>uno<span class="wordmark-dot">.</span>alla<span class="wordmark-dot">.</span>volta</span>
+          <span>one<span class="wordmark-dot">.</span>step<span class="wordmark-dot">.</span>at<span class="wordmark-dot">.</span>a<span class="wordmark-dot">.</span>time</span>
         </div>
         <div class="header-actions">
-          <div class="privacy-indicator"><span class="privacy-light" aria-hidden="true"></span><span data-i18n="privacy">Nessun tracciamento</span></div>
-          <div class="language-switch" role="group" aria-label="Lingua del sito" data-i18n-aria-label="languageLabel">
-            <button id="language-it" type="button" lang="it" aria-pressed="true">IT</button>
-            <button id="language-en" type="button" lang="en" aria-pressed="false">EN</button>
+          <div class="privacy-indicator"><span class="privacy-light" aria-hidden="true"></span><span data-i18n="privacy">No tracking</span></div>
+          <div class="language-switch" role="group" aria-label="Website language" data-i18n-aria-label="languageLabel">
+            <button id="language-it" type="button" lang="it" aria-pressed="false">IT</button>
+            <button id="language-en" type="button" lang="en" aria-pressed="true">EN</button>
           </div>
         </div>
       </header>
 
       <main id="main" class="main-content">
         <section id="intro-screen" class="screen intro-screen" aria-labelledby="intro-title">
-          <div class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> <span data-i18n="introEyebrow">QUESTIONARIO PER ADULTI</span></div>
-          <h1 id="intro-title"><span data-i18n="introHeading1">Una domanda</span><br /><span class="heading-accent" data-i18n="introHeading2">alla volta.</span></h1>
-          <p class="lead" data-i18n="introLead">Un posto tranquillo per rispondere con calma. Non ci sono risposte giuste o sbagliate.</p>
-          <div class="intro-facts" aria-label="Informazioni sul questionario" data-i18n-aria-label="factsLabel">
-            <span id="question-count">5 domande</span>
+          <div class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> <span data-i18n="introEyebrow">ADULT QUESTIONNAIRE</span></div>
+          <h1 id="intro-title"><span data-i18n="introHeading1">One question</span><br /><span class="heading-accent" data-i18n="introHeading2">at a time.</span></h1>
+          <p class="lead" data-i18n="introLead">A quiet place to answer at your own pace. There are no right or wrong answers.</p>
+          <div class="intro-facts" aria-label="Questionnaire information" data-i18n-aria-label="factsLabel">
+            <span id="question-count">5 questions</span>
             <span aria-hidden="true" class="fact-separator"></span>
-            <span data-i18n="timeFact">Nessun limite di tempo</span>
+            <span data-i18n="timeFact">No time limit</span>
             <span aria-hidden="true" class="fact-separator"></span>
-            <span data-i18n="localFact">Risposte solo sul dispositivo</span>
+            <span data-i18n="localFact">Answers stay on this device</span>
           </div>
           <div class="intro-actions">
-            <button id="start-button" class="button button-primary button-large" type="button"><span data-i18n="start">Comincia</span> <span aria-hidden="true">→</span></button>
+            <button id="start-button" class="button button-primary button-large" type="button"><span data-i18n="start">Start</span> <span aria-hidden="true">→</span></button>
           </div>
           <div class="notice" role="note">
             <svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <p><strong data-i18n="demoTitle">Prototipo dimostrativo.</strong> <span data-i18n="demoText">Le domande e i punteggi di esempio non sono uno strumento clinico validato. Non permettono di stabilire se una persona abbia ADHD.</span></p>
+            <p><strong data-i18n="demoTitle">Demonstration only.</strong> <span data-i18n="demoText">The sample questions and scores are not a clinically validated instrument. They cannot determine whether someone has ADHD.</span></p>
           </div>
         </section>
 
         <section id="question-screen" class="screen question-screen" aria-labelledby="question-title" hidden>
           <div class="question-top">
-            <div class="progress-heading"><p id="step-label" class="step-label">Domanda 1 di 5</p><p id="section-label" class="section-label">Attenzione</p></div>
-            <div id="progress-track" class="progress-track" role="progressbar" aria-label="Avanzamento del questionario" data-i18n-aria-label="progressLabel" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1"><span id="progress-fill"></span></div>
+            <div class="progress-heading"><p id="step-label" class="step-label">Question 1 of 5</p><p id="section-label" class="section-label">Attention</p></div>
+            <div id="progress-track" class="progress-track" role="progressbar" aria-label="Questionnaire progress" data-i18n-aria-label="progressLabel" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1"><span id="progress-fill"></span></div>
           </div>
 
           <div class="question-content">
-            <p class="question-overline" data-i18n="overline">Pensa agli ultimi mesi</p>
+            <p class="question-overline" data-i18n="overline">Think about the past few months</p>
             <form id="question-form" novalidate>
               <fieldset class="question-fieldset">
-                <legend id="question-title" class="question-title" tabindex="-1">Caricamento domanda…</legend>
-                <p id="question-hint" class="question-hint" data-i18n="questionHint">Scegli l'opzione che ti rappresenta meglio.</p>
+                <legend id="question-title" class="question-title" tabindex="-1">Loading question…</legend>
+                <p id="question-hint" class="question-hint" data-i18n="questionHint">Choose the option that best describes you.</p>
                 <div id="answer-options" class="answer-options"></div>
               </fieldset>
               <div class="question-navigation">
-                <button id="back-button" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Indietro</button>
-                <button id="next-button" class="button button-primary" type="submit" disabled>Avanti <span aria-hidden="true">→</span></button>
+                <button id="back-button" class="button button-quiet" type="button"><span aria-hidden="true">←</span> Back</button>
+                <button id="next-button" class="button button-primary" type="submit" disabled>Next <span aria-hidden="true">→</span></button>
               </div>
             </form>
           </div>
-          <p class="quiet-assurance" data-i18n="reassurance">Puoi cambiare una risposta tornando indietro.</p>
+          <p class="quiet-assurance" data-i18n="reassurance">You can change an answer by going back.</p>
         </section>
 
         <section id="result-screen" class="screen result-screen" aria-labelledby="result-title" hidden>
-          <div class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> <span data-i18n="resultEyebrow">QUESTIONARIO COMPLETATO</span></div>
-          <h1 id="result-title" tabindex="-1"><span data-i18n="resultHeading1">Hai finito.</span><br /><span class="heading-accent" data-i18n="resultHeading2">Con calma.</span></h1>
-          <p class="lead" data-i18n="resultLead">Questa è soltanto una lettura numerica delle risposte. Non è una diagnosi, né una stima della probabilità di ADHD.</p>
+          <div class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> <span data-i18n="resultEyebrow">QUESTIONNAIRE COMPLETE</span></div>
+          <h1 id="result-title" tabindex="-1"><span data-i18n="resultHeading1">All done.</span><br /><span class="heading-accent" data-i18n="resultHeading2">At your pace.</span></h1>
+          <p class="lead" data-i18n="resultLead">This is only a numerical summary of your answers. It is not a diagnosis or an estimate of the probability of ADHD.</p>
           <div class="result-card">
-            <p class="result-kicker" data-i18n="resultKicker">PUNTEGGIO DI ESEMPIO</p>
+            <p class="result-kicker" data-i18n="resultKicker">SAMPLE SCORE</p>
             <div class="result-number"><span id="result-score">0</span><span class="result-denominator"> / <span id="result-max">0</span></span></div>
-            <p class="result-explanation" data-i18n="resultExplanation">Somma dei punti configurati per ciascuna risposta.</p>
+            <p class="result-explanation" data-i18n="resultExplanation">Sum of the points assigned to each selected answer.</p>
           </div>
           <div id="result-band" class="interpretation" hidden></div>
           <div class="domain-card">
-            <h2 data-i18n="domainHeading">Dettaglio per area</h2>
+            <h2 data-i18n="domainHeading">Breakdown by area</h2>
             <div id="domain-list"></div>
           </div>
           <div class="notice result-notice" role="note">
             <svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <p id="result-disclaimer"><strong data-i18n="reminderTitle">Da ricordare.</strong> <span data-i18n="reminderText">Uno screening, anche quando validato, non sostituisce una valutazione specialistica.</span></p>
+            <p id="result-disclaimer"><strong data-i18n="reminderTitle">Please remember.</strong> <span data-i18n="reminderText">Even validated screening cannot replace an assessment by a qualified clinician.</span></p>
           </div>
-          <button id="restart-button" class="button button-primary button-large" type="button"><span data-i18n="restart">Ricomincia</span> <span aria-hidden="true">↺</span></button>
-          <p class="quiet-assurance" data-i18n="resetDisclaimer">Ricominciare cancella immediatamente le risposte dalla memoria della pagina.</p>
+          <button id="restart-button" class="button button-primary button-large" type="button"><span data-i18n="restart">Start again</span> <span aria-hidden="true">↺</span></button>
+          <p class="quiet-assurance" data-i18n="resetDisclaimer">Starting again immediately clears your answers from this page's memory.</p>
         </section>
 
         <section id="error-screen" class="screen" aria-labelledby="error-title" hidden>
-          <h1 id="error-title" data-i18n="errorHeading">Configurazione da correggere</h1>
+          <h1 id="error-title" data-i18n="errorHeading">Configuration needs attention</h1>
           <p id="error-detail" class="lead"></p>
         </section>
       </main>
 
       <footer class="site-footer">
-        <span data-i18n="footer1">Progettato per restare semplice.</span>
-        <span data-i18n="footer2">Zero cookie · Zero account · Zero dati inviati dall'app</span>
+        <span data-i18n="footer1">Designed to stay simple.</span>
+        <span data-i18n="footer2">No cookies · No accounts · No answers sent by this app</span>
       </footer>
     </div>
-    <noscript><p class="noscript">Per usare il questionario è necessario abilitare JavaScript. Nessun dato viene inviato a un server.</p></noscript>
+    <noscript><p class="noscript">JavaScript is required to use the questionnaire. No answers are sent to a server.</p></noscript>
   </body>
 </html>
