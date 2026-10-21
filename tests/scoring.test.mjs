@@ -55,3 +55,30 @@ test('configurazioni errate e risposte fuori range vengono rifiutate', () => {
   assert.throws(() => validateQuestionnaire(broken), /duplicato/);
   assert.throws(() => calculateScores(questionnaire, new Map([['focus-1', 99]])), /non valida/);
 });
+test('questionario bilingue completo, stesso scoring tra IT ed EN', async () => {
+  const { localized, messages, detectLanguage } = await import('../i18n.mjs');
+  assert.deepEqual(Object.keys(messages.it).sort(), Object.keys(messages.en).sort());
+  assert.equal(detectLanguage('en-US', null), 'en');
+  assert.equal(detectLanguage('en-US', 'it'), 'it');
+  for (const question of questionnaire.questions) {
+    for (const lang of ['it','en']) {
+      assert.ok(localized(question.text, lang));
+      assert.ok(localized(questionnaire.domains[question.domain], lang));
+    }
+    const options = question.options ?? questionnaire.options;
+    assert.equal(options.it.length, options.en.length);
+    assert.equal(options.it.length, question.points.length);
+  }
+  const selections = new Map(questionnaire.questions.map(q => [q.id, 4]));
+  const result = calculateScores(questionnaire, selections);
+  assert.equal(result.score, 5);
+  assert.equal(result.max, 5);
+});
+
+test('traduzione mancante viene rifiutata per le nuove domande', () => {
+  const invalid = {
+    ...questionnaire,
+    questions: [{ ...questionnaire.questions[0], text: { it: 'Solo italiano' } }],
+  };
+  assert.throws(() => validateQuestionnaire(invalid), /testo mancante/);
+});
